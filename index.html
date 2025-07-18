@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cow Clicker</title>
+    <title>Cow Clicker v0.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
@@ -13,8 +14,7 @@
             font-family: 'Inter', sans-serif;
             user-select: none;
             overflow-y: scroll;
-            /* Funky Cow-Spot Background */
-            background-color: #87CEEB; /* Sky Blue */
+            background-color: #87CEEB;
             background-image:
                 radial-gradient(#444 15%, transparent 16%),
                 radial-gradient(#444 15%, transparent 16%);
@@ -32,7 +32,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 300px; /* Control max cow size */
+            max-width: 300px;
         }
         .cow {
             cursor: pointer;
@@ -48,20 +48,14 @@
             position: absolute;
             font-family: 'Luckiest Guy', cursive;
             font-size: 2.5rem;
-            color: #FFD700; /* Gold */
+            color: #FFD700;
             text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
             pointer-events: none;
             animation: floatUp 1.5s ease-out forwards;
         }
         @keyframes floatUp {
-            from {
-                opacity: 1;
-                transform: translateY(0) rotate(0deg);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-120px) rotate(15deg);
-            }
+            from { opacity: 1; transform: translateY(0) rotate(0deg); }
+            to { opacity: 0; transform: translateY(-120px) rotate(15deg); }
         }
         .golden-cow {
             position: fixed;
@@ -71,12 +65,10 @@
             transition: transform 0.2s, opacity 0.5s;
             animation: shimmer 1.5s infinite;
             z-index: 100;
-            display: none; /* Hidden by default */
+            display: none;
             filter: drop-shadow(0 0 15px gold);
         }
-        .golden-cow:hover {
-            transform: scale(1.2) rotate(10deg);
-        }
+        .golden-cow:hover { transform: scale(1.2) rotate(10deg); }
         @keyframes shimmer {
             0% { filter: brightness(1) drop-shadow(0 0 15px gold); }
             50% { filter: brightness(1.7) drop-shadow(0 0 25px gold); }
@@ -98,14 +90,14 @@
             border: 4px solid white;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        .achievement-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-20px) scale(1);
+        .achievement-toast.show { 
+            opacity: 1; 
+            transform: translateX(-50%) translateY(-20px) scale(1); 
         }
         .game-card {
             background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
-            border: 5px solid #4A2511; /* Brown */
+            border: 5px solid #4A2511;
             border-radius: 20px;
             box-shadow: 0 10px 15px rgba(0,0,0,0.2);
         }
@@ -118,111 +110,185 @@
             border-bottom: 4px solid rgba(0,0,0,0.2);
             text-transform: uppercase;
         }
-        .funky-button:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
+        .funky-button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .funky-button:active { transform: translateY(1px); border-bottom-width: 2px; }
+        .funky-button:disabled { background-color: #9ca3af; cursor: not-allowed; border-bottom-color: #6b7280; transform: translateY(0); filter: brightness(1); }
+        .license-details summary { cursor: pointer; outline: none; }
+        .license-details[open] { background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 8px; margin-top: 0.5rem; }
+        
+        .tabs-container {
+            border-bottom: 5px solid #4A2511;
+            padding: 0 0.5rem;
         }
-        .funky-button:active {
-            transform: translateY(1px);
-            border-bottom-width: 2px;
+        .tab-button {
+            background-color: #D2B48C;
+            border: 5px solid #4A2511;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: -5px;
+            transform: translateY(5px);
+            transition: all 0.2s ease-out;
+            color: #4A2511;
         }
-        .funky-button:disabled {
-            background-color: #9ca3af;
-            cursor: not-allowed;
-            border-bottom-color: #6b7280;
+        .tab-button.active {
+            background-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(0);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
-        .license-details summary {
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        #event-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(45deg, #fceabb, #f8b500);
+            color: #333;
+            text-align: center;
+            padding: 0.5rem;
+            z-index: 500;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .share-icon {
             cursor: pointer;
-            outline: none;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            transition: transform 0.2s;
         }
-        .license-details[open] {
-            background: rgba(255,255,255,0.7);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 0.5rem;
+        .share-icon:hover {
+            transform: scale(1.2);
+        }
+        /* Styles for the hidden screenshot template */
+        #achievement-screenshot-template {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 500px;
+            padding: 20px;
+            background-color: #87CEEB;
+            background-image:
+                radial-gradient(#444 15%, transparent 16%),
+                radial-gradient(#444 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            border: 10px solid #4A2511;
+            border-radius: 15px;
+            color: white;
         }
     </style>
 </head>
 <body class="text-gray-800">
 
+    <!-- Hidden template for generating achievement screenshots -->
+    <div id="achievement-screenshot-template">
+        <h2 class="funky-font text-4xl text-center" style="text-shadow: 3px 3px 0px #4A2511;">Achievement Unlocked!</h2>
+        <div class="text-center mt-4">
+            <p id="screenshot-nickname" class="funky-font text-3xl text-yellow-300" style="text-shadow: 2px 2px 0px #4A2511;"></p>
+            <p class="text-xl font-bold mt-1" style="text-shadow: 1px 1px 0px #000;">has achieved</p>
+            <p id="screenshot-ach-name" class="funky-font text-4xl mt-2" style="text-shadow: 2px 2px 0px #4A2511;"></p>
+            <p id="screenshot-ach-desc" class="text-lg font-semibold mt-1" style="text-shadow: 1px 1px 0px #000;"></p>
+            <p id="screenshot-date" class="text-md mt-6 font-bold" style="text-shadow: 1px 1px 0px #000;"></p>
+        </div>
+    </div>
+
+
+    <div id="event-banner" class="funky-font text-2xl"></div>
+
     <div class="container mx-auto p-4 max-w-7xl">
-        <header class="text-center mb-6">
+        <header class="text-center my-6">
             <h1 class="text-7xl md:text-8xl funky-font text-white" style="text-shadow: 4px 4px 0px #4A2511;">Cow Clicker</h1>
-            <p class="text-lg text-white font-bold" style="text-shadow: 1px 1px 0px #4A2511;">The udderly addictive clicking game!</p>
+            <div class="mt-2">
+                <input type="text" id="nickname-input" placeholder="Enter Your Nickname" class="text-center funky-font bg-white/80 border-4 border-[#4A2511] rounded-lg p-2 text-xl text-[#4A2511] placeholder:text-gray-500/80 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
         </header>
 
         <div id="milk-stats" class="text-center mb-6 p-4 game-card">
             <h2 id="milk-counter" class="text-5xl funky-font text-blue-600">0 Milk</h2>
+            <div class="flex justify-center items-center gap-4">
+                <p id="cream-counter" class="text-2xl funky-font text-yellow-600">0 Cream</p>
+            </div>
             <p id="milk-per-second" class="text-xl font-bold">per second: 0</p>
             <p id="milk-per-click" class="text-xl font-bold">per click: 1</p>
         </div>
 
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left Column: The Cow -->
             <section id="cow-section" class="lg:col-span-1 game-card p-6 flex flex-col justify-center items-center">
                 <div class="cow-container">
-                    <!-- Embedded SVG for the main cow -->
-                    <svg id="cow" class="cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="A majestic cow">
-                        <path d="M 50,90 C 20,90 10,120 40,150 C 70,180 130,180 160,150 C 190,120 180,90 150,90 L 50,90 Z" fill="white" stroke="black" stroke-width="3"/>
-                        <path d="M 150,90 C 140,50 180,40 180,70 C 180,85 165,90 150,90 Z" fill="white" stroke="black" stroke-width="3"/>
-                        <ellipse cx="165" cy="65" rx="5" ry="5" fill="black"/>
-                        <path d="M 175,80 C 170,85 160,85 155,80" fill="none" stroke="black" stroke-width="2"/>
-                        <path d="M 155,55 C 150,45 160,40 160,50" fill="none" stroke="black" stroke-width="3"/>
-                        <path d="M 145,60 C 135,50 145,45 148,55" fill="none" stroke="black" stroke-width="3"/>
-                        <rect x="60" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/>
-                        <rect x="85" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/>
-                        <rect x="120" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/>
-                        <rect x="145" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/>
-                        <path d="M 70,110 C 60,120 80,140 90,130 C 100,120 80,100 70,110 Z" fill="black"/>
-                        <path d="M 110,100 C 100,115 125,125 130,115 C 135,105 120,85 110,100 Z" fill="black"/>
-                        <path d="M 40,95 C 20,80 20,110 30,110" fill="none" stroke="black" stroke-width="3"/>
-                    </svg>
+                    <svg id="cow" class="cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="A majestic cow"><path d="M 50,90 C 20,90 10,120 40,150 C 70,180 130,180 160,150 C 190,120 180,90 150,90 L 50,90 Z" fill="white" stroke="black" stroke-width="3"/><path d="M 150,90 C 140,50 180,40 180,70 C 180,85 165,90 150,90 Z" fill="white" stroke="black" stroke-width="3"/><ellipse cx="165" cy="65" rx="5" ry="5" fill="black"/><path d="M 175,80 C 170,85 160,85 155,80" fill="none" stroke="black" stroke-width="2"/><path d="M 155,55 C 150,45 160,40 160,50" fill="none" stroke="black" stroke-width="3"/><path d="M 145,60 C 135,50 145,45 148,55" fill="none" stroke="black" stroke-width="3"/><rect x="60" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/><rect x="85" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/><rect x="120" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/><rect x="145" y="145" width="15" height="40" fill="white" stroke="black" stroke-width="3"/><path d="M 70,110 C 60,120 80,140 90,130 C 100,120 80,100 70,110 Z" fill="black"/><path d="M 110,100 C 100,115 125,125 130,115 C 135,105 120,85 110,100 Z" fill="black"/><path d="M 40,95 C 20,80 20,110 30,110" fill="none" stroke="black" stroke-width="3"/></svg>
                 </div>
                 <p class="mt-4 font-bold text-center">Click the cow!</p>
             </section>
 
-            <!-- Middle Column: Upgrades -->
-            <section id="upgrades-section" class="lg:col-span-1 game-card p-6">
-                <h3 class="text-4xl funky-font text-center mb-4 border-b-4 border-gray-200 pb-2">Upgrades</h3>
-                <div class="space-y-4">
-                    <!-- Auto Clicker Upgrade -->
+            <section class="lg:col-span-2 game-card p-6">
+                <div class="tabs-container flex">
+                    <button class="tab-button funky-font active" data-tab="upgrades">Upgrades</button>
+                    <button class="tab-button funky-font" data-tab="pasture">The Pasture</button>
+                    <button class="tab-button funky-font" data-tab="achievements">Achievements</button>
+                </div>
+
+                <div id="upgrades" class="tab-content active mt-4 space-y-4">
                     <div class="bg-green-200 p-4 rounded-lg border-2 border-green-400">
                         <h4 class="text-2xl funky-font">Farmhand</h4>
-                        <p class="text-gray-600 mb-2">Automatically produces milk for you.</p>
+                        <p class="text-gray-600 mb-2">Each Farmhand works your Holsteins to produce milk automatically.</p>
                         <p>Level: <span id="farmhand-level" class="font-bold">0</span></p>
-                        <p>Yield: <span id="farmhand-yield" class="font-bold">0</span> milk/s</p>
-                        <button id="buy-farmhand" class="w-full mt-2 funky-button bg-green-500 text-white">
-                            Buy for <span id="farmhand-cost">10</span> Milk
-                        </button>
+                        <p>Total Yield: <span id="farmhand-yield" class="font-bold">0</span> milk/s</p>
+                        <button id="buy-farmhand" class="w-full mt-2 funky-button bg-green-500 text-white">Buy for <span id="farmhand-cost">10</span> Milk</button>
                     </div>
-                    <!-- Click Power Upgrade -->
                     <div class="bg-blue-200 p-4 rounded-lg border-2 border-blue-400">
                         <h4 class="text-2xl funky-font">Milking Machine</h4>
                         <p class="text-gray-600 mb-2">Increases milk per click.</p>
                         <p>Level: <span id="machine-level" class="font-bold">0</span></p>
                         <p>Power: +<span id="machine-power" class="font-bold">1</span> milk/click</p>
-                        <button id="buy-machine" class="w-full mt-2 funky-button bg-blue-500 text-white">
-                            Buy for <span id="machine-cost">50</span> Milk
-                        </button>
+                        <button id="buy-machine" class="w-full mt-2 funky-button bg-blue-500 text-white">Buy for <span id="machine-cost">50</span> Milk</button>
+                    </div>
+                    <div class="bg-yellow-200 p-4 rounded-lg border-2 border-yellow-400">
+                        <h4 class="text-2xl funky-font">Creamery</h4>
+                        <p class="text-gray-600 mb-2">Uses Cream to massively boost milk per click.</p>
+                        <p>Level: <span id="creamery-level" class="font-bold">0</span></p>
+                        <p>Boost: +<span id="creamery-boost" class="font-bold">0</span>% milk/click</p>
+                        <button id="buy-creamery" class="w-full mt-2 funky-button bg-yellow-500 text-white">Buy for <span id="creamery-cost">10</span> Cream</button>
                     </div>
                 </div>
-            </section>
 
-            <!-- Right Column: Achievements & Prestige -->
-            <section id="achievements-section" class="lg:col-span-1 game-card p-6">
-                <h3 class="text-4xl funky-font text-center mb-4 border-b-4 border-gray-200 pb-2">Achievements</h3>
-                <div id="achievements-list" class="space-y-2 max-h-64 overflow-y-auto pr-2">
-                    <!-- Achievements will be dynamically added here -->
+                <div id="pasture" class="tab-content mt-4 space-y-4">
+                    <div class="bg-gray-200 p-4 rounded-lg border-2 border-gray-400">
+                        <h4 class="text-2xl funky-font">Holstein Cow</h4>
+                        <p class="text-gray-600 mb-2">The backbone of your farm. Produces 1 milk/s per Farmhand.</p>
+                        <p>Owned: <span id="holstein-cows" class="font-bold">0</span></p>
+                        <button id="buy-holstein" class="w-full mt-2 funky-button bg-gray-500 text-white">Buy for <span id="holstein-cost">1000</span> Milk</button>
+                    </div>
+                    <div class="bg-orange-200 p-4 rounded-lg border-2 border-orange-400">
+                        <h4 class="text-2xl funky-font">Jersey Cow</h4>
+                        <p class="text-gray-600 mb-2">Produces less milk but has a 10% chance per second to find 1 Cream.</p>
+                        <p>Owned: <span id="jersey-cows" class="font-bold">0</span></p>
+                        <button id="buy-jersey" class="w-full mt-2 funky-button bg-orange-500 text-white">Buy for <span id="jersey-cost">5000</span> Milk</button>
+                    </div>
+                     <div class="bg-red-200 p-4 rounded-lg border-2 border-red-400">
+                        <h4 class="text-2xl funky-font">Angus Cow</h4>
+                        <p class="text-gray-600 mb-2">Doesn't produce milk. Instead, generates 0.01 Reputation per second.</p>
+                        <p>Owned: <span id="angus-cows" class="font-bold">0</span></p>
+                        <button id="buy-angus" class="w-full mt-2 funky-button bg-red-500 text-white">Buy for <span id="angus-cost">1000000</span> Milk</button>
+                    </div>
                 </div>
-                 <div class="mt-6">
-                    <h3 class="text-4xl funky-font text-center mb-4 border-b-4 border-gray-200 pb-2">Prestige</h3>
-                    <div class="bg-purple-200 p-4 rounded-lg border-2 border-purple-400">
-                        <h4 class="text-2xl funky-font">Sell the Farm</h4>
-                        <p class="text-gray-600 mb-2">Reset your progress for a permanent production boost. Requires 1 Trillion milk.</p>
-                        <p>Reputation: <span id="reputation-points" class="font-bold">0</span> (+<span id="reputation-bonus" class="font-bold">0</span>% bonus)</p>
-                        <button id="prestige-button" class="w-full mt-2 funky-button bg-purple-600 text-white">
-                            Sell Farm
-                        </button>
+
+                <div id="achievements" class="tab-content mt-4">
+                    <div id="achievements-list" class="space-y-2 max-h-96 overflow-y-auto pr-2"></div>
+                     <div class="mt-6">
+                        <h3 class="text-4xl funky-font text-center mb-4 border-b-4 border-gray-200 pb-2">Prestige</h3>
+                        <div class="bg-purple-200 p-4 rounded-lg border-2 border-purple-400">
+                            <h4 class="text-2xl funky-font">Sell the Farm</h4>
+                            <p class="text-gray-600 mb-2">Reset progress for a permanent production boost. Requires 1 Trillion milk.</p>
+                            <p>Reputation: <span id="reputation-points" class="font-bold">0</span> (+<span id="reputation-bonus" class="font-bold">0</span>% bonus)</p>
+                            <button id="prestige-button" class="w-full mt-2 funky-button bg-purple-600 text-white">Sell Farm</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -230,66 +296,35 @@
         
         <footer class="text-center mt-8 text-white font-semibold" style="text-shadow: 1px 1px 0px #4A2511;">
             <div class="mb-4">
-                <p>Created by Kok | Version 0.1</p>
+                <p>Created by Kok | Version 0.4</p>
                 <button id="reset-button" class="mt-2 text-sm text-red-200 hover:text-white font-bold">Hard Reset Game</button>
             </div>
             <details class="license-details text-sm text-left text-gray-800">
-                <summary class="font-bold text-white" style="text-shadow: 1px 1px 0px #4A2511;">MIT License</summary>
+                <summary id="license-summary" class="font-bold text-white" style="text-shadow: 1px 1px 0px #4A2511;">MIT License</summary>
                 <p class="font-normal">Copyright (c) 2024 Kok</p>
-                <p class="font-normal mt-2">Permission is hereby granted, free of charge, to any person obtaining a copy
-                of this software and associated documentation files (the "Software"), to deal
-                in the Software without restriction, including without limitation the rights
-                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                copies of the Software, and to permit persons to whom the Software is
-                furnished to do so, subject to the following conditions:</p>
-                <p class="font-normal mt-2">The above copyright notice and this permission notice shall be included in all
-                copies or substantial portions of the Software.</p>
-                <p class="font-normal mt-2">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                SOFTWARE.</p>
+                <p class="font-normal mt-2">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+                <p class="font-normal mt-2">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+                <p class="font-normal mt-2">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
             </details>
         </footer>
     </div>
 
-    <!-- Golden Cow Element -->
-    <svg id="golden-cow" class="golden-cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="Golden Cow">
-        <defs>
-            <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#FFDF00;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-        <path d="M 50,90 C 20,90 10,120 40,150 C 70,180 130,180 160,150 C 190,120 180,90 150,90 L 50,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/>
-        <path d="M 150,90 C 140,50 180,40 180,70 C 180,85 165,90 150,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/>
-        <ellipse cx="165" cy="65" rx="5" ry="5" fill="#4a2c2a"/>
-    </svg>
+    <svg id="golden-cow" class="golden-cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="Golden Cow"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FFDF00;stop-opacity:1" /><stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" /></linearGradient></defs><path d="M 50,90 C 20,90 10,120 40,150 C 70,180 130,180 160,150 C 190,120 180,90 150,90 L 50,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/><path d="M 150,90 C 140,50 180,40 180,70 C 180,85 165,90 150,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/><ellipse cx="165" cy="65" rx="5" ry="5" fill="#4a2c2a"/></svg>
 
-    <!-- Achievement Toast Notification -->
     <div id="achievement-toast" class="achievement-toast funky-font">
         <strong id="toast-title">Achievement Unlocked!</strong>
         <p id="toast-description">You're a natural!</p>
     </div>
 
     <script>
-        // The JavaScript logic remains the same.
         document.addEventListener('DOMContentLoaded', () => {
-            // DOM Elements
+            // --- DOM Elements ---
+            const nicknameInput = document.getElementById('nickname-input');
             const cow = document.getElementById('cow');
             const milkCounter = document.getElementById('milk-counter');
+            const creamCounter = document.getElementById('cream-counter');
             const mpsCounter = document.getElementById('milk-per-second');
             const mpcCounter = document.getElementById('milk-per-click');
-            const buyFarmhandBtn = document.getElementById('buy-farmhand');
-            const buyMachineBtn = document.getElementById('buy-machine');
-            const farmhandLevelEl = document.getElementById('farmhand-level');
-            const farmhandYieldEl = document.getElementById('farmhand-yield');
-            const farmhandCostEl = document.getElementById('farmhand-cost');
-            const machineLevelEl = document.getElementById('machine-level');
-            const machinePowerEl = document.getElementById('machine-power');
-            const machineCostEl = document.getElementById('machine-cost');
             const achievementsList = document.getElementById('achievements-list');
             const goldenCow = document.getElementById('golden-cow');
             const toast = document.getElementById('achievement-toast');
@@ -299,66 +334,124 @@
             const reputationPointsEl = document.getElementById('reputation-points');
             const reputationBonusEl = document.getElementById('reputation-bonus');
             const resetButton = document.getElementById('reset-button');
+            const licenseSummary = document.getElementById('license-summary');
+            const eventBanner = document.getElementById('event-banner');
 
-            // Game State
-            let gameState = {
+            // --- Game State ---
+            let gameState = {};
+            const initialGameState = {
+                nickname: "A Farmer",
                 milk: 0,
                 totalMilk: 0,
+                cream: 0,
+                totalCream: 0,
                 totalClicks: 0,
                 farmhands: 0,
                 machines: 0,
+                creameries: 0,
+                cows: { holstein: 1, jersey: 0, angus: 0 },
                 unlockedAchievements: [],
                 reputation: 0,
+                timePlayed: 0,
+                failedBuys: 0,
+                licenseClicked: false,
+                goldenCowsClicked: 0,
+                prestigeCount: 0,
+                resets: 0,
+                event: { active: false, type: null, duration: 0, modifier: 1 },
             };
 
-            // Game Constants
-            const FARMHAND_BASE_COST = 10;
-            const FARMHAND_BASE_YIELD = 1;
-            const MACHINE_BASE_COST = 50;
-            const MACHINE_BASE_POWER = 1;
+            // --- Game Constants ---
             const PRESTIGE_COST = 1e12; // 1 Trillion
 
+            // --- Achievements ---
             const achievements = {
-                click1: { name: "Getting Started", description: "Click the cow for the first time.", condition: () => gameState.totalClicks >= 1, bonus: 1.01 },
-                click100: { name: "Click Enthusiast", description: "Click 100 times.", condition: () => gameState.totalClicks >= 100, bonus: 1.02 },
-                click1000: { name: "Click Addict", description: "Click 1,000 times.", condition: () => gameState.totalClicks >= 1000, bonus: 1.05 },
-                milk100: { name: "Dairy Debut", description: "Earn 100 milk.", condition: () => gameState.totalMilk >= 100, bonus: 1.01 },
-                milk10000: { name: "Milk Magnate", description: "Earn 10,000 milk.", condition: () => gameState.totalMilk >= 10000, bonus: 1.03 },
-                milk1M: { name: "Millionaire Moos", description: "Earn 1,000,000 milk.", condition: () => gameState.totalMilk >= 1e6, bonus: 1.05 },
-                farmhand1: { name: "First Hire", description: "Buy your first Farmhand.", condition: () => gameState.farmhands >= 1, bonus: 1.01 },
-                farmhand25: { name: "Farm Manager", description: "Own 25 Farmhands.", condition: () => gameState.farmhands >= 25, bonus: 1.05 },
-                machine1: { name: "Technological Advance", description: "Buy a Milking Machine.", condition: () => gameState.machines >= 1, bonus: 1.01 },
-                machine25: { name: "Industrial Revolution", description: "Own 25 Milking Machines.", condition: () => gameState.machines >= 25, bonus: 1.05 },
+                click1: { name: "Getting Started", description: "Click the cow once.", bonus: 1.01 },
+                click1k: { name: "Click Addict", description: "Click 1,000 times.", bonus: 1.02 },
+                click100k: { name: "Carpal Tunnel Hopeful", description: "Click 100,000 times.", bonus: 1.05 },
+                milk1k: { name: "Dairy Debut", description: "Earn 1,000 milk.", bonus: 1.01 },
+                milk1M: { name: "Millionaire Moos", description: "Earn 1,000,000 milk.", bonus: 1.03 },
+                milk1B: { name: "Billionaire Bovine", description: "Earn 1,000,000,000 milk.", bonus: 1.05 },
+                farmhand25: { name: "Farm Manager", description: "Own 25 Farmhands.", bonus: 1.02 },
+                machine25: { name: "Industrial Revolution", description: "Own 25 Milking Machines.", bonus: 1.02 },
+                creamery1: { name: "Sweet Profits", description: "Build your first Creamery.", bonus: 1.05 },
+                goldenTouch: { name: "Golden Touch", description: "Click your first Golden Cow.", bonus: 1.02 },
+                goldRush: { name: "Gold Rush", description: "Click 10 Golden Cows.", bonus: 1.10 },
+                secondChance: { name: "Second Chance", description: "Prestige for the first time.", bonus: 1.10 },
+                eternalFarmer: { name: "Eternal Farmer", description: "Prestige 10 times.", bonus: 1.25 },
+                impatient: { name: "Impatient", description: "Try to buy an upgrade you can't afford 50 times.", bonus: 1.01, hidden: true },
+                license: { name: "License and Registration", description: "Read the license.", bonus: 1.01, hidden: true },
+                reset: { name: "What Did It Do To You?", description: "Use the Hard Reset button.", bonus: 1.00, hidden: true },
+                lazy: { name: "Are You Even Trying?", description: "Don't click the cow for the first 2 minutes.", bonus: 1.05, hidden: true },
+                loner: { name: "Just Me and My Cow", description: "Reach 1M milk without buying any Farmhands.", bonus: 1.10, hidden: true },
+            };
+            
+            const achievementConditions = {
+                click1: () => gameState.totalClicks >= 1,
+                click1k: () => gameState.totalClicks >= 1000,
+                click100k: () => gameState.totalClicks >= 100000,
+                milk1k: () => gameState.totalMilk >= 1000,
+                milk1M: () => gameState.totalMilk >= 1e6,
+                milk1B: () => gameState.totalMilk >= 1e9,
+                farmhand25: () => gameState.farmhands >= 25,
+                machine25: () => gameState.machines >= 25,
+                creamery1: () => gameState.creameries >= 1,
+                goldenTouch: () => gameState.goldenCowsClicked >= 1,
+                goldRush: () => gameState.goldenCowsClicked >= 10,
+                secondChance: () => gameState.prestigeCount >= 1,
+                eternalFarmer: () => gameState.prestigeCount >= 10,
+                impatient: () => gameState.failedBuys >= 50,
+                license: () => gameState.licenseClicked,
+                reset: () => gameState.resets > 0,
+                lazy: () => gameState.totalClicks === 0 && gameState.timePlayed >= 120,
+                loner: () => gameState.totalMilk >= 1e6 && gameState.farmhands === 0,
             };
 
-            // Utility Functions
+            // --- Utility Functions ---
             const formatNumber = (num) => {
                 if (num < 1000) return num.toFixed(0);
                 const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
                 const i = Math.floor(Math.log10(num) / 3);
-                const shortNum = (num / Math.pow(1000, i)).toFixed(2);
-                return shortNum + suffixes[i];
+                return (num / Math.pow(1000, i)).toFixed(2) + suffixes[i];
+            };
+            const calculateCost = (base, level, exponent = 1.15) => Math.floor(base * Math.pow(exponent, level));
+
+            const generateAchievementScreenshot = (id) => {
+                if (!id || !achievements[id]) return;
+                const ach = achievements[id];
+                const nickname = gameState.nickname || "A Farmer";
+                const timestamp = new Date().toLocaleString();
+
+                // Populate the hidden template
+                document.getElementById('screenshot-nickname').textContent = nickname;
+                document.getElementById('screenshot-ach-name').textContent = `"${ach.name}"`;
+                document.getElementById('screenshot-ach-desc').textContent = ach.description;
+                document.getElementById('screenshot-date').textContent = `Unlocked on ${timestamp}`;
+
+                const template = document.getElementById('achievement-screenshot-template');
+                
+                html2canvas(template, { useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `cow-clicker-achievement-${id}.png`;
+                    link.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                    link.click();
+                });
             };
 
-            const calculateCost = (base, level) => Math.floor(base * Math.pow(1.15, level));
-
-            // Game Logic
-            const getMilkPerClick = () => {
-                const baseMpc = 1 + gameState.machines * MACHINE_BASE_POWER;
-                return Math.floor(baseMpc * getAchievementBonus() * getReputationBonus());
-            };
+            // --- Game Logic ---
+            const getAchievementBonus = () => gameState.unlockedAchievements.reduce((total, id) => total * (achievements[id].bonus || 1), 1);
+            const getReputationBonus = () => 1 + gameState.reputation * 0.05;
+            const getEventModifier = () => gameState.event.active ? gameState.event.modifier : 1;
 
             const getMilkPerSecond = () => {
-                const baseMps = gameState.farmhands * FARMHAND_BASE_YIELD;
-                return Math.floor(baseMps * getAchievementBonus() * getReputationBonus());
-            };
-            
-            const getAchievementBonus = () => {
-                return gameState.unlockedAchievements.reduce((total, id) => total * (achievements[id].bonus || 1), 1);
+                const baseMps = gameState.farmhands * gameState.cows.holstein * 1;
+                return baseMps * getAchievementBonus() * getReputationBonus() * getEventModifier();
             };
 
-            const getReputationBonus = () => {
-                return 1 + gameState.reputation * 0.05; // 5% bonus per reputation point
+            const getMilkPerClick = () => {
+                const creameryBoost = 1 + (gameState.creameries * 0.25);
+                const baseMpc = 1 + gameState.machines;
+                return Math.floor(baseMpc * creameryBoost * getAchievementBonus() * getReputationBonus() * getEventModifier());
             };
 
             const clickCow = (event) => {
@@ -367,7 +460,6 @@
                 gameState.totalMilk += mpc;
                 gameState.totalClicks++;
                 showFloatingText(`+${formatNumber(mpc)}`, event);
-                checkAchievements();
             };
 
             const showFloatingText = (text, event) => {
@@ -376,35 +468,33 @@
                 el.textContent = text;
                 const cowContainer = document.querySelector('.cow-container');
                 cowContainer.appendChild(el);
-                
                 const containerRect = cowContainer.getBoundingClientRect();
                 el.style.left = `${event.clientX - containerRect.left - el.clientWidth / 2}px`;
                 el.style.top = `${event.clientY - containerRect.top - el.clientHeight / 2}px`;
-
                 setTimeout(() => el.remove(), 1500);
             };
 
-            const buyFarmhand = () => {
-                const cost = calculateCost(FARMHAND_BASE_COST, gameState.farmhands);
+            const buyWithMilk = (cost, callback) => {
                 if (gameState.milk >= cost) {
                     gameState.milk -= cost;
-                    gameState.farmhands++;
-                    checkAchievements();
+                    callback();
+                } else {
+                    gameState.failedBuys++;
                 }
             };
-
-            const buyMachine = () => {
-                const cost = calculateCost(MACHINE_BASE_COST, gameState.machines);
-                if (gameState.milk >= cost) {
-                    gameState.milk -= cost;
-                    gameState.machines++;
-                    checkAchievements();
+            
+            const buyWithCream = (cost, callback) => {
+                if (gameState.cream >= cost) {
+                    gameState.cream -= cost;
+                    callback();
+                } else {
+                    gameState.failedBuys++;
                 }
             };
 
             const checkAchievements = () => {
                 Object.keys(achievements).forEach(id => {
-                    if (!gameState.unlockedAchievements.includes(id) && achievements[id].condition()) {
+                    if (!gameState.unlockedAchievements.includes(id) && achievementConditions[id]()) {
                         gameState.unlockedAchievements.push(id);
                         showAchievementToast(achievements[id]);
                         renderAchievements();
@@ -416,29 +506,25 @@
                 toastTitle.textContent = `Achievement Unlocked!`;
                 toastDescription.textContent = achievement.name;
                 toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                setTimeout(() => toast.classList.remove('show'), 3000);
             };
 
             const spawnGoldenCow = () => {
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-                goldenCow.style.top = `${Math.random() * (viewportHeight - 150)}px`;
-                goldenCow.style.left = `${Math.random() * (viewportWidth - 150)}px`;
+                goldenCow.style.top = `${Math.random() * (window.innerHeight - 150)}px`;
+                goldenCow.style.left = `${Math.random() * (window.innerWidth - 150)}px`;
                 goldenCow.style.display = 'block';
                 goldenCow.style.opacity = '1';
-
                 setTimeout(() => {
                     goldenCow.style.opacity = '0';
                     setTimeout(() => goldenCow.style.display = 'none', 500);
-                }, 5000); // Golden cow stays for 5 seconds
+                }, 5000);
             };
 
             const clickGoldenCow = (event) => {
-                const bonus = Math.max(getMilkPerClick() * 100, getMilkPerSecond() * 10 * 60); // 100 clicks worth or 10 minutes of MPS
+                const bonus = Math.max(getMilkPerClick() * 100, getMilkPerSecond() * 10 * 60);
                 gameState.milk += bonus;
                 gameState.totalMilk += bonus;
+                gameState.goldenCowsClicked++;
                 showFloatingText(`+${formatNumber(bonus)}!`, event);
                 goldenCow.style.display = 'none';
             };
@@ -446,46 +532,76 @@
             const prestige = () => {
                 if (gameState.milk >= PRESTIGE_COST) {
                     if(confirm(`Are you sure you want to sell the farm? This will reset your milk, upgrades, and achievements for a permanent bonus.`)){
-                        const milkForPrestige = Math.floor(Math.sqrt(gameState.totalMilk / PRESTIGE_COST));
-                        gameState.reputation += milkForPrestige > 0 ? milkForPrestige : 1;
-                        
-                        gameState.milk = 0;
-                        gameState.totalMilk = 0;
-                        gameState.totalClicks = 0;
-                        gameState.farmhands = 0;
-                        gameState.machines = 0;
-                        gameState.unlockedAchievements = [];
-                        
+                        const nickname = gameState.nickname;
+                        const milkForPrestige = Math.floor(Math.sqrt(gameState.totalMilk / 1e11));
+                        const newRep = gameState.reputation + (milkForPrestige > 0 ? milkForPrestige : 1);
+                        const prestigeCount = (gameState.prestigeCount || 0) + 1;
+                        const unlockedHidden = gameState.unlockedAchievements.filter(id => achievements[id].hidden);
+                        gameState = { ...initialGameState, nickname: nickname, reputation: newRep, prestigeCount: prestigeCount, unlockedAchievements: unlockedHidden };
                         saveGame();
-                        updateUI();
-                        renderAchievements();
+                        location.reload();
                     }
                 }
             };
+            
+            const triggerEvent = () => {
+                if(gameState.event.active) return;
+                const eventType = "Market Boom";
+                gameState.event = { active: true, type: eventType, duration: 60, modifier: 2 };
+                eventBanner.textContent = `${eventType}! All production is doubled for 60 seconds!`;
+                eventBanner.style.display = 'block';
+            };
 
+            // --- Rendering ---
             const updateUI = () => {
-                const mps = getMilkPerSecond();
-                const mpc = getMilkPerClick();
-                
                 milkCounter.textContent = `${formatNumber(gameState.milk)} Milk`;
-                mpsCounter.textContent = `per second: ${formatNumber(mps)}`;
-                mpcCounter.textContent = `per click: ${formatNumber(mpc)}`;
+                creamCounter.textContent = `${formatNumber(gameState.cream)} Cream`;
+                mpsCounter.textContent = `per second: ${formatNumber(getMilkPerSecond())}`;
+                mpcCounter.textContent = `per click: ${formatNumber(getMilkPerClick())}`;
 
-                const farmhandCost = calculateCost(FARMHAND_BASE_COST, gameState.farmhands);
-                farmhandLevelEl.textContent = gameState.farmhands;
-                farmhandYieldEl.textContent = formatNumber(gameState.farmhands * FARMHAND_BASE_YIELD);
-                buyFarmhandBtn.querySelector('span').textContent = formatNumber(farmhandCost);
-                buyFarmhandBtn.disabled = gameState.milk < farmhandCost;
+                document.getElementById('farmhand-level').textContent = formatNumber(gameState.farmhands);
+                document.getElementById('machine-level').textContent = formatNumber(gameState.machines);
+                document.getElementById('creamery-level').textContent = formatNumber(gameState.creameries);
+                document.getElementById('farmhand-yield').textContent = formatNumber(gameState.farmhands * gameState.cows.holstein);
+                document.getElementById('machine-power').textContent = formatNumber(1 + gameState.machines);
+                document.getElementById('creamery-boost').textContent = formatNumber(gameState.creameries * 25);
                 
-                const machineCost = calculateCost(MACHINE_BASE_COST, gameState.machines);
-                machineLevelEl.textContent = gameState.machines;
-                machinePowerEl.textContent = formatNumber(1 + gameState.machines * MACHINE_BASE_POWER);
-                buyMachineBtn.querySelector('span').textContent = formatNumber(machineCost);
-                buyMachineBtn.disabled = gameState.milk < machineCost;
+                let cost, costEl;
+                cost = calculateCost(10, gameState.farmhands);
+                costEl = document.getElementById('farmhand-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.milk < cost; costEl.textContent = formatNumber(cost); }
                 
-                reputationPointsEl.textContent = gameState.reputation;
+                cost = calculateCost(50, gameState.machines);
+                costEl = document.getElementById('machine-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.milk < cost; costEl.textContent = formatNumber(cost); }
+
+                cost = calculateCost(10, gameState.creameries, 1.5);
+                costEl = document.getElementById('creamery-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.cream < cost; costEl.textContent = formatNumber(cost); }
+
+                ['holstein', 'jersey', 'angus'].forEach(type => {
+                    const count = gameState.cows[type];
+                    const countEl = document.getElementById(`${type}-cows`);
+                    if(countEl) countEl.textContent = formatNumber(count);
+
+                    const baseCost = {holstein: 1000, jersey: 5000, angus: 1e6}[type];
+                    cost = calculateCost(baseCost, count, 1.25);
+                    costEl = document.getElementById(`${type}-cost`);
+                    if(costEl) {
+                        costEl.parentElement.disabled = gameState.milk < cost;
+                        costEl.textContent = formatNumber(cost);
+                    }
+                });
+
+                reputationPointsEl.textContent = formatNumber(gameState.reputation);
                 reputationBonusEl.textContent = ((getReputationBonus() - 1) * 100).toFixed(0);
                 prestigeButton.disabled = gameState.milk < PRESTIGE_COST;
+                
+                if(gameState.event.active) {
+                    eventBanner.textContent = `${gameState.event.type}! All production is doubled for ${Math.ceil(gameState.event.duration)} seconds!`;
+                } else {
+                    eventBanner.style.display = 'none';
+                }
             };
 
             const renderAchievements = () => {
@@ -493,65 +609,112 @@
                 Object.keys(achievements).forEach(id => {
                     const ach = achievements[id];
                     const isUnlocked = gameState.unlockedAchievements.includes(id);
+                    if(ach.hidden && !isUnlocked) return;
+
                     const el = document.createElement('div');
-                    el.className = `p-2 rounded-lg transition-all duration-300 font-semibold ${isUnlocked ? 'bg-yellow-300 text-yellow-800' : 'bg-gray-200 text-gray-500'}`;
-                    el.innerHTML = `
-                        <strong>${ach.name}</strong>
-                        <p class="text-sm font-normal">${ach.description}</p>
-                    `;
+                    el.className = `p-2 rounded-lg transition-all duration-300 font-semibold flex justify-between items-center ${isUnlocked ? 'bg-yellow-300 text-yellow-800' : 'bg-gray-200 text-gray-500'}`;
+                    el.innerHTML = `<div><strong>${ach.name}</strong><p class="text-sm font-normal">${ach.description}</p></div>`;
+                    
+                    if (isUnlocked) {
+                        const shareIcon = document.createElement('span');
+                        shareIcon.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-12h2v4h-2zm0 6h2v2h-2z" opacity=".3"/><path d="M12 4c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm-2.5 3.5c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5zm5 0c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5zm-2.5 9c-2.336 0-4.33-1.433-5.143-3.488l1.829-.653c.571 1.604 2.185 2.641 3.971 2.641s3.4-1.037 3.971-2.641l1.829.653C16.33 14.067 14.336 15.5 12 15.5zM12 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8-8-3.589 8-8 8z"/></svg>`;
+                        shareIcon.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" opacity=".3"/><path d="M12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm4.59 7.59l-4.59 4.58-2.59-2.58L8 15l4 4 8-8z"/></svg>`;
+                        shareIcon.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v6h4v-6h3l1-4h-4V7a1 1 0 0 1 1-1h3V2z" opacity=".3"/><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-5 14h-2v-6H9V9h4V7a1 1 0 0 1 1-1h1v2h-1v2h2v2h-2v6z"/></svg>`;
+                        shareIcon.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-3V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm11 12H4v-8h16v8zm-9-4h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
+                        shareIcon.title = "Share Achievement";
+                        shareIcon.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            generateAchievementScreenshot(id);
+                        });
+                        el.appendChild(shareIcon);
+                    }
+                    
                     achievementsList.appendChild(el);
                 });
             };
 
-            const saveGame = () => {
-                try {
-                    localStorage.setItem('cowClickerSave', JSON.stringify(gameState));
-                } catch (e) {
-                    console.error("Could not save game state:", e);
-                }
-            };
-
+            // --- Save/Load ---
+            const saveGame = () => localStorage.setItem('cowClickerSave_v0.4', JSON.stringify(gameState));
             const loadGame = () => {
-                try {
-                    const savedState = localStorage.getItem('cowClickerSave');
-                    if (savedState) {
-                        const loadedState = JSON.parse(savedState);
-                        gameState = { ...gameState, ...loadedState };
+                const savedState = localStorage.getItem('cowClickerSave_v0.4');
+                gameState = savedState ? JSON.parse(savedState) : { ...initialGameState };
+                Object.keys(initialGameState).forEach(key => {
+                    if(gameState[key] === undefined) {
+                        gameState[key] = initialGameState[key];
                     }
-                } catch (e) {
-                    console.error("Could not load game state:", e);
-                    gameState = { milk: 0, totalMilk: 0, totalClicks: 0, farmhands: 0, machines: 0, unlockedAchievements: [], reputation: 0 };
-                }
+                    if (typeof initialGameState[key] === 'object' && initialGameState[key] !== null && !Array.isArray(initialGameState[key])) {
+                        gameState[key] = { ...initialGameState[key], ...gameState[key] };
+                    }
+                });
+                nicknameInput.value = gameState.nickname;
             };
-
             const hardReset = () => {
                 if (confirm("Are you sure you want to completely reset your game? This cannot be undone.")) {
-                    localStorage.removeItem('cowClickerSave');
+                    gameState.resets = (gameState.resets || 0) + 1;
+                    checkAchievements();
+                    saveGame();
+                    localStorage.removeItem('cowClickerSave_v0.4');
                     location.reload();
                 }
             };
 
+            // --- Game Loop ---
             const gameLoop = () => {
-                const mps = getMilkPerSecond();
-                gameState.milk += mps / 10;
-                gameState.totalMilk += mps / 10;
+                const secondsPassed = 0.1;
+                gameState.milk += getMilkPerSecond() * secondsPassed;
+                gameState.totalMilk += getMilkPerSecond() * secondsPassed;
+                gameState.timePlayed += secondsPassed;
+                if(Math.random() < (gameState.cows.jersey * 0.1 * secondsPassed)) {
+                    gameState.cream++;
+                    gameState.totalCream++;
+                }
+                gameState.reputation += gameState.cows.angus * 0.01 * secondsPassed;
+                if(gameState.event.active) {
+                    gameState.event.duration -= secondsPassed;
+                    if(gameState.event.duration <= 0) {
+                        gameState.event.active = false;
+                    }
+                }
                 updateUI();
                 checkAchievements();
             };
 
+            // --- Initialization ---
             loadGame();
             renderAchievements();
+            updateUI();
             
+            // --- Event Listeners ---
+            nicknameInput.addEventListener('change', (e) => { gameState.nickname = e.target.value || "A Farmer"; });
             cow.addEventListener('click', clickCow);
-            buyFarmhandBtn.addEventListener('click', buyFarmhand);
-            buyMachineBtn.addEventListener('click', buyMachine);
             goldenCow.addEventListener('click', clickGoldenCow);
             prestigeButton.addEventListener('click', prestige);
             resetButton.addEventListener('click', hardReset);
+            licenseSummary.addEventListener('click', () => { gameState.licenseClicked = true; });
 
+            document.getElementById('buy-farmhand').addEventListener('click', () => buyWithMilk(calculateCost(10, gameState.farmhands), () => gameState.farmhands++));
+            document.getElementById('buy-machine').addEventListener('click', () => buyWithMilk(calculateCost(50, gameState.machines), () => gameState.machines++));
+            document.getElementById('buy-creamery').addEventListener('click', () => buyWithCream(calculateCost(10, gameState.creameries, 1.5), () => gameState.creameries++));
+            document.getElementById('buy-holstein').addEventListener('click', () => buyWithMilk(calculateCost(1000, gameState.cows.holstein, 1.25), () => gameState.cows.holstein++));
+            document.getElementById('buy-jersey').addEventListener('click', () => buyWithMilk(calculateCost(5000, gameState.cows.jersey, 1.25), () => gameState.cows.jersey++));
+            document.getElementById('buy-angus').addEventListener('click', () => buyWithMilk(calculateCost(1e6, gameState.cows.angus, 1.25), () => gameState.cows.angus++));
+
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Start Game Loops
             setInterval(gameLoop, 100);
             setInterval(saveGame, 5000);
             setInterval(spawnGoldenCow, 60000);
+            setInterval(triggerEvent, 120000);
         });
     </script>
 </body>
