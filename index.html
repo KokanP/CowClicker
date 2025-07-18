@@ -131,6 +131,16 @@
             cursor: not-allowed;
             border-bottom-color: #6b7280;
         }
+        .license-details summary {
+            cursor: pointer;
+            outline: none;
+        }
+        .license-details[open] {
+            background: rgba(255,255,255,0.7);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -218,14 +228,34 @@
             </section>
         </main>
         
-        <footer class="text-center mt-8">
-            <p class="text-white font-semibold" style="text-shadow: 1px 1px 0px #4A2511;">Cow Clicker &copy; 2024. All rights reserved.</p>
-            <button id="reset-button" class="mt-2 text-sm text-red-200 hover:text-white font-bold">Hard Reset Game</button>
+        <footer class="text-center mt-8 text-white font-semibold" style="text-shadow: 1px 1px 0px #4A2511;">
+            <div class="mb-4">
+                <p>Created by Kok | Version 0.1</p>
+                <button id="reset-button" class="mt-2 text-sm text-red-200 hover:text-white font-bold">Hard Reset Game</button>
+            </div>
+            <details class="license-details text-sm text-left text-gray-800">
+                <summary class="font-bold text-white" style="text-shadow: 1px 1px 0px #4A2511;">MIT License</summary>
+                <p class="font-normal">Copyright (c) 2024 Kok</p>
+                <p class="font-normal mt-2">Permission is hereby granted, free of charge, to any person obtaining a copy
+                of this software and associated documentation files (the "Software"), to deal
+                in the Software without restriction, including without limitation the rights
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is
+                furnished to do so, subject to the following conditions:</p>
+                <p class="font-normal mt-2">The above copyright notice and this permission notice shall be included in all
+                copies or substantial portions of the Software.</p>
+                <p class="font-normal mt-2">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                SOFTWARE.</p>
+            </details>
         </footer>
     </div>
 
     <!-- Golden Cow Element -->
-    <!-- Embedded SVG for the golden cow -->
     <svg id="golden-cow" class="golden-cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="Golden Cow">
         <defs>
             <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -245,8 +275,7 @@
     </div>
 
     <script>
-        // The JavaScript logic remains the same as it controls the game's mechanics, not its appearance.
-        // All the visual changes are handled by the new HTML structure and CSS styles.
+        // The JavaScript logic remains the same.
         document.addEventListener('DOMContentLoaded', () => {
             // DOM Elements
             const cow = document.getElementById('cow');
@@ -348,7 +377,6 @@
                 const cowContainer = document.querySelector('.cow-container');
                 cowContainer.appendChild(el);
                 
-                // Position at the click location relative to the container
                 const containerRect = cowContainer.getBoundingClientRect();
                 el.style.left = `${event.clientX - containerRect.left - el.clientWidth / 2}px`;
                 el.style.top = `${event.clientY - containerRect.top - el.clientHeight / 2}px`;
@@ -421,7 +449,6 @@
                         const milkForPrestige = Math.floor(Math.sqrt(gameState.totalMilk / PRESTIGE_COST));
                         gameState.reputation += milkForPrestige > 0 ? milkForPrestige : 1;
                         
-                        // Reset progress
                         gameState.milk = 0;
                         gameState.totalMilk = 0;
                         gameState.totalClicks = 0;
@@ -436,7 +463,6 @@
                 }
             };
 
-            // Rendering
             const updateUI = () => {
                 const mps = getMilkPerSecond();
                 const mpc = getMilkPerClick();
@@ -445,21 +471,18 @@
                 mpsCounter.textContent = `per second: ${formatNumber(mps)}`;
                 mpcCounter.textContent = `per click: ${formatNumber(mpc)}`;
 
-                // Farmhand
                 const farmhandCost = calculateCost(FARMHAND_BASE_COST, gameState.farmhands);
                 farmhandLevelEl.textContent = gameState.farmhands;
                 farmhandYieldEl.textContent = formatNumber(gameState.farmhands * FARMHAND_BASE_YIELD);
                 buyFarmhandBtn.querySelector('span').textContent = formatNumber(farmhandCost);
                 buyFarmhandBtn.disabled = gameState.milk < farmhandCost;
                 
-                // Machine
                 const machineCost = calculateCost(MACHINE_BASE_COST, gameState.machines);
                 machineLevelEl.textContent = gameState.machines;
                 machinePowerEl.textContent = formatNumber(1 + gameState.machines * MACHINE_BASE_POWER);
                 buyMachineBtn.querySelector('span').textContent = formatNumber(machineCost);
                 buyMachineBtn.disabled = gameState.milk < machineCost;
                 
-                // Prestige
                 reputationPointsEl.textContent = gameState.reputation;
                 reputationBonusEl.textContent = ((getReputationBonus() - 1) * 100).toFixed(0);
                 prestigeButton.disabled = gameState.milk < PRESTIGE_COST;
@@ -480,7 +503,6 @@
                 });
             };
 
-            // Save/Load
             const saveGame = () => {
                 try {
                     localStorage.setItem('cowClickerSave', JSON.stringify(gameState));
@@ -494,12 +516,10 @@
                     const savedState = localStorage.getItem('cowClickerSave');
                     if (savedState) {
                         const loadedState = JSON.parse(savedState);
-                        // Ensure all properties are present to avoid errors from older save files
                         gameState = { ...gameState, ...loadedState };
                     }
                 } catch (e) {
                     console.error("Could not load game state:", e);
-                    // If loading fails, start a new game
                     gameState = { milk: 0, totalMilk: 0, totalClicks: 0, farmhands: 0, machines: 0, unlockedAchievements: [], reputation: 0 };
                 }
             };
@@ -511,20 +531,17 @@
                 }
             };
 
-            // Game Loop
             const gameLoop = () => {
                 const mps = getMilkPerSecond();
-                gameState.milk += mps / 10; // Update 10 times per second for smoother visuals
+                gameState.milk += mps / 10;
                 gameState.totalMilk += mps / 10;
                 updateUI();
                 checkAchievements();
             };
 
-            // Initialization
             loadGame();
             renderAchievements();
             
-            // Event Listeners
             cow.addEventListener('click', clickCow);
             buyFarmhandBtn.addEventListener('click', buyFarmhand);
             buyMachineBtn.addEventListener('click', buyMachine);
@@ -532,10 +549,9 @@
             prestigeButton.addEventListener('click', prestige);
             resetButton.addEventListener('click', hardReset);
 
-            // Start Game Loops
-            setInterval(gameLoop, 100); // Main game logic loop
-            setInterval(saveGame, 5000); // Autosave every 5 seconds
-            setInterval(spawnGoldenCow, 60000); // Attempt to spawn a golden cow every minute
+            setInterval(gameLoop, 100);
+            setInterval(saveGame, 5000);
+            setInterval(spawnGoldenCow, 60000);
         });
     </script>
 </body>
