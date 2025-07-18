@@ -1,0 +1,2 @@
+# CowClicker
+Click the cow.
