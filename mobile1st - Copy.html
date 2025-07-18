@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Cow Clicker v0.4.4</title>
+    <title>Cow Clicker v0.4.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
     <style>
-        /* General Body and Font Styles */
         html, body {
             overscroll-behavior: none;
             touch-action: manipulation;
@@ -20,32 +19,25 @@
         body {
             font-family: 'Inter', sans-serif;
             user-select: none;
-            background-color: #87CEEB; /* Sky Blue */
+            background-color: #87CEEB;
             background-image:
-                radial-gradient(circle at center, #fff 20%, transparent 21%),
-                radial-gradient(circle at center, #fff 20%, transparent 21%);
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
-            animation: moveClouds 60s linear infinite;
-        }
-        @keyframes moveClouds {
-            from { background-position: 0 0, 25px 25px; }
-            to { background-position: 500px 0, 525px 0; }
+                radial-gradient(#444 15%, transparent 16%),
+                radial-gradient(#444 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
         }
         .funky-font {
             font-family: 'Luckiest Guy', cursive;
             letter-spacing: 2px;
             text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
         }
-
-        /* Cow and Click Effect Styles */
         .cow-container {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 250px;
+            max-width: 250px; /* Made cow slightly smaller for compact view */
             margin: auto;
         }
         .cow {
@@ -71,8 +63,6 @@
             from { opacity: 1; transform: translateY(0) rotate(0deg); }
             to { opacity: 0; transform: translateY(-120px) rotate(15deg); }
         }
-
-        /* Golden Cow Styles */
         .golden-cow {
             position: fixed;
             width: 100px;
@@ -84,12 +74,6 @@
             display: none;
             filter: drop-shadow(0 0 15px gold);
         }
-        @keyframes shimmer {
-            0%, 100% { filter: drop-shadow(0 0 15px gold) brightness(1); }
-            50% { filter: drop-shadow(0 0 25px gold) brightness(1.5); }
-        }
-
-        /* UI Card and Button Styles */
         .game-card {
             background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
@@ -106,8 +90,8 @@
             border-bottom: 4px solid rgba(0,0,0,0.2);
             text-transform: uppercase;
         }
-        .funky-button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
-        .funky-button:active:not(:disabled) { transform: translateY(1px); border-bottom-width: 2px; }
+        .funky-button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .funky-button:active { transform: translateY(1px); border-bottom-width: 2px; }
         .funky-button:disabled { background-color: #9ca3af; cursor: not-allowed; border-bottom-color: #6b7280; transform: translateY(0); filter: brightness(1); }
         
         /* Modal Styles */
@@ -158,41 +142,7 @@
         }
         .modal-panel { display: none; }
         .modal-panel.active { display: block; }
-
-        /* Achievement Toast Styles (FIXED) */
-        .achievement-toast {
-            position: fixed;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4A2511;
-            color: #FFD700;
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            border: 4px solid #D2B48C;
-            z-index: 101;
-            text-align: center;
-            transition: bottom 0.5s ease-in-out;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .achievement-toast.show {
-            bottom: 20px;
-        }
-        .achievement-toast p {
-            color: white;
-            margin: 0;
-        }
-        .share-icon {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .share-icon:hover {
-            transform: scale(1.1);
-        }
-
-        /* Hidden Screenshot Template */
+        
         #achievement-screenshot-template {
             position: absolute;
             left: -9999px;
@@ -201,10 +151,10 @@
             padding: 20px;
             background-color: #87CEEB;
             background-image:
-                radial-gradient(circle at center, #fff 20%, transparent 21%),
-                radial-gradient(circle at center, #fff 20%, transparent 21%);
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
+                radial-gradient(#444 15%, transparent 16%),
+                radial-gradient(#444 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
             border: 10px solid #4A2511;
             border-radius: 15px;
             color: white;
@@ -258,7 +208,7 @@
             </nav>
         </main>
         <footer class="text-center text-white font-semibold text-sm" style="text-shadow: 1px 1px 0px #4A2511;">
-            <p>Created by Kok | Version 0.4.4</p>
+            <p>Created by Kok | Version 0.4.3</p>
             <button id="reset-button" class="mt-1 text-red-200 hover:text-white">Hard Reset</button>
         </footer>
     </div>
@@ -330,18 +280,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Confirmation Modal (NEW) -->
-    <div id="confirm-modal-overlay" class="modal-overlay">
-        <div class="modal-content game-card p-6 text-center">
-            <h3 id="confirm-modal-title" class="text-3xl funky-font text-center mb-4">Are you sure?</h3>
-            <p id="confirm-modal-text" class="mb-6">This action cannot be undone.</p>
-            <div class="flex justify-center gap-4">
-                <button id="confirm-modal-yes" class="funky-button bg-red-500 text-white px-8">Yes</button>
-                <button id="confirm-modal-no" class="funky-button bg-gray-500 text-white px-8">No</button>
-            </div>
-        </div>
-    </div>
 
     <svg id="golden-cow" class="golden-cow" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" alt="Golden Cow"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FFDF00;stop-opacity:1" /><stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" /></linearGradient></defs><path d="M 50,90 C 20,90 10,120 40,150 C 70,180 130,180 160,150 C 190,120 180,90 150,90 L 50,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/><path d="M 150,90 C 140,50 180,40 180,70 C 180,85 165,90 150,90 Z" fill="url(#gold-gradient)" stroke="#8B4513" stroke-width="3"/><ellipse cx="165" cy="65" rx="5" ry="5" fill="#4a2c2a"/></svg>
 
@@ -375,32 +313,23 @@
             const tabButtons = document.querySelectorAll('.tab-button');
             const modalPanels = document.querySelectorAll('.modal-panel');
 
-            // Confirmation Modal elements (NEW)
-            const confirmModalOverlay = document.getElementById('confirm-modal-overlay');
-            const confirmModalTitle = document.getElementById('confirm-modal-title');
-            const confirmModalText = document.getElementById('confirm-modal-text');
-            const confirmModalYes = document.getElementById('confirm-modal-yes');
-            const confirmModalNo = document.getElementById('confirm-modal-no');
-
             // --- Game State ---
             let gameState = {};
-            const SAVE_KEY = 'cowClickerSave_v0.4.4';
             const initialGameState = {
                 nickname: "A Farmer", milk: 0, totalMilk: 0, cream: 0, totalCream: 0, totalClicks: 0,
                 farmhands: 0, machines: 0, creameries: 0,
                 cows: { holstein: 1, jersey: 0, angus: 0 },
                 unlockedAchievements: [], reputation: 0, timePlayed: 0,
-                goldenCowsClicked: 0, prestigeCount: 0,
+                failedBuys: 0, licenseClicked: false, goldenCowsClicked: 0,
+                prestigeCount: 0, resets: 0,
             };
 
-            const PRESTIGE_COST = 1e12; // 1 Trillion
+            const PRESTIGE_COST = 1e12;
 
-            // --- Definitions ---
             const achievements = {
                 click1: { name: "Getting Started", description: "Click the cow once.", bonus: 1.01 },
                 click1k: { name: "Click Addict", description: "Click 1,000 times.", bonus: 1.02 },
                 milk1M: { name: "Millionaire Moos", description: "Earn 1,000,000 milk.", bonus: 1.03 },
-                // Add more achievements here
             };
             
             const achievementConditions = {
@@ -412,31 +341,11 @@
             // --- Utility Functions ---
             const formatNumber = (num) => {
                 if (num < 1000) return num.toFixed(0);
-                const suffixes = ["", "K", "M", "B", "T", "q", "Q", "s", "S"];
+                const suffixes = ["", "K", "M", "B", "T"];
                 const i = Math.floor(Math.log10(num) / 3);
-                if (i >= suffixes.length) return num.toExponential(2);
                 return (num / Math.pow(1000, i)).toFixed(2) + suffixes[i];
             };
             const calculateCost = (base, level, exponent = 1.15) => Math.floor(base * Math.pow(exponent, level));
-            
-            // --- NEW: Custom Confirmation Modal Function ---
-            let confirmCallback = null;
-            const showConfirmation = (title, text, onConfirm) => {
-                confirmModalTitle.textContent = title;
-                confirmModalText.textContent = text;
-                confirmCallback = onConfirm;
-                confirmModalOverlay.classList.add('show');
-            };
-            const hideConfirmation = () => {
-                confirmModalOverlay.classList.remove('show');
-                confirmCallback = null;
-            };
-            confirmModalYes.addEventListener('click', () => {
-                if (confirmCallback) confirmCallback();
-                hideConfirmation();
-            });
-            confirmModalNo.addEventListener('click', hideConfirmation);
-
 
             const generateAchievementScreenshot = (id) => {
                 if (!id || !achievements[id]) return;
@@ -448,7 +357,7 @@
                 document.getElementById('screenshot-ach-desc').textContent = ach.description;
                 document.getElementById('screenshot-date').textContent = `Unlocked on ${timestamp}`;
                 const template = document.getElementById('achievement-screenshot-template');
-                html2canvas(template, { useCORS: true, backgroundColor: null }).then(canvas => {
+                html2canvas(template, { useCORS: true }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = `cow-clicker-achievement-${id}.png`;
                     link.href = canvas.toDataURL("image/png");
@@ -467,31 +376,22 @@
                 gameState.milk += mpc;
                 gameState.totalMilk += mpc;
                 gameState.totalClicks++;
-                
-                // Floating text effect
                 const el = document.createElement('div');
                 el.className = 'floating-text';
                 el.textContent = `+${formatNumber(mpc)}`;
                 const container = document.querySelector('.cow-container');
                 container.appendChild(el);
-                
-                // FIXED: Position the text relative to the container, not the viewport
                 const rect = container.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                
-                el.style.left = `${x - el.clientWidth / 2}px`;
-                el.style.top = `${y - el.clientHeight / 2}px`;
-                
+                el.style.left = `${event.clientX - rect.left - el.clientWidth / 2}px`;
+                el.style.top = `${event.clientY - rect.top - el.clientHeight / 2}px`;
                 setTimeout(() => el.remove(), 1500);
             };
 
-            const buyItem = (cost, currency, onPurchase) => {
-                if (gameState[currency] >= cost) {
-                    gameState[currency] -= cost;
-                    onPurchase();
-                    updateUI(); // Update UI immediately after purchase
-                }
+            const buyWithMilk = (cost, callback) => {
+                if (gameState.milk >= cost) { gameState.milk -= cost; callback(); }
+            };
+            const buyWithCream = (cost, callback) => {
+                if (gameState.cream >= cost) { gameState.cream -= cost; callback(); }
             };
 
             const checkAchievements = () => {
@@ -519,39 +419,32 @@
             };
 
             const clickGoldenCow = (event) => {
-                event.stopPropagation(); // Prevent click from passing through
-                const bonus = Math.max(getMilkPerClick() * 100, getMilkPerSecond() * 10 * 60, 100);
+                const bonus = Math.max(getMilkPerClick() * 100, getMilkPerSecond() * 10 * 60);
                 gameState.milk += bonus;
                 gameState.totalMilk += bonus;
-                gameState.goldenCowsClicked++;
-                
+                gameState.goldenCowsClicked = (gameState.goldenCowsClicked || 0) + 1;
                 const el = document.createElement('div');
                 el.className = 'floating-text';
-                el.style.color = 'gold';
                 el.textContent = `+${formatNumber(bonus)}!`;
-                document.body.appendChild(el); // Append to body for global positioning
-                el.style.position = 'fixed'; // Use fixed positioning
+                document.body.appendChild(el);
                 el.style.left = `${event.clientX - el.clientWidth / 2}px`;
                 el.style.top = `${event.clientY - el.clientHeight / 2}px`;
-                
                 setTimeout(() => el.remove(), 1500);
                 goldenCow.style.display = 'none';
             };
             
             const prestige = () => {
                 if (gameState.milk >= PRESTIGE_COST) {
-                    showConfirmation('Sell the Farm?', `This will reset your progress in exchange for Reputation. Are you sure?`, () => {
+                    if(confirm(`Are you sure you want to sell the farm?`)){
                         const nickname = gameState.nickname;
-                        // FIXED: Prestige calculation based on total milk earned for fairness
                         const milkForPrestige = Math.floor(Math.sqrt(gameState.totalMilk / 1e11));
-                        const newRep = gameState.reputation + Math.max(1, milkForPrestige);
-                        const prestigeCount = gameState.prestigeCount + 1;
-                        const unlockedHidden = gameState.unlockedAchievements.filter(id => achievements[id]?.hidden);
-                        
+                        const newRep = gameState.reputation + (milkForPrestige > 0 ? milkForPrestige : 1);
+                        const prestigeCount = (gameState.prestigeCount || 0) + 1;
+                        const unlockedHidden = gameState.unlockedAchievements.filter(id => achievements[id] && achievements[id].hidden);
                         gameState = { ...initialGameState, nickname, reputation: newRep, prestigeCount, unlockedAchievements: unlockedHidden };
                         saveGame();
                         location.reload();
-                    });
+                    }
                 }
             };
 
@@ -560,36 +453,31 @@
                 creamCounter.textContent = `${formatNumber(gameState.cream)} Cream`;
                 mpsCounter.textContent = `per second: ${formatNumber(getMilkPerSecond())}`;
                 mpcCounter.textContent = `per click: ${formatNumber(getMilkPerClick())}`;
-                
-                // Update upgrade levels and costs
                 document.getElementById('farmhand-level').textContent = formatNumber(gameState.farmhands);
                 document.getElementById('machine-level').textContent = formatNumber(gameState.machines);
                 document.getElementById('creamery-level').textContent = formatNumber(gameState.creameries);
                 document.getElementById('farmhand-yield').textContent = formatNumber(gameState.farmhands * gameState.cows.holstein);
                 document.getElementById('machine-power').textContent = formatNumber(1 + gameState.machines);
                 document.getElementById('creamery-boost').textContent = formatNumber(gameState.creameries * 25);
-
-                const updateButton = (buttonId, cost, currency) => {
-                    const button = document.getElementById(buttonId);
-                    if (button) {
-                        button.disabled = gameState[currency] < cost;
-                        button.querySelector('span').textContent = `${formatNumber(cost)} ${currency.charAt(0).toUpperCase() + currency.slice(1)}`;
-                    }
-                }
-
-                updateButton('buy-farmhand', calculateCost(10, gameState.farmhands), 'milk');
-                updateButton('buy-machine', calculateCost(50, gameState.machines), 'milk');
-                updateButton('buy-creamery', calculateCost(10, gameState.creameries, 1.5), 'cream');
-                
-                // Update pasture
+                let cost, costEl;
+                cost = calculateCost(10, gameState.farmhands);
+                costEl = document.getElementById('farmhand-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.milk < cost; costEl.textContent = formatNumber(cost); }
+                cost = calculateCost(50, gameState.machines);
+                costEl = document.getElementById('machine-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.milk < cost; costEl.textContent = formatNumber(cost); }
+                cost = calculateCost(10, gameState.creameries, 1.5);
+                costEl = document.getElementById('creamery-cost');
+                if(costEl) { costEl.parentElement.disabled = gameState.cream < cost; costEl.textContent = formatNumber(cost); }
                 ['holstein', 'jersey', 'angus'].forEach(type => {
-                    document.getElementById(`${type}-cows`).textContent = formatNumber(gameState.cows[type]);
+                    const count = gameState.cows[type];
+                    const countEl = document.getElementById(`${type}-cows`);
+                    if(countEl) countEl.textContent = formatNumber(count);
                     const baseCost = {holstein: 1000, jersey: 5000, angus: 1e6}[type];
-                    const cost = calculateCost(baseCost, gameState.cows[type], 1.25);
-                    updateButton(`buy-${type}`, cost, 'milk');
+                    cost = calculateCost(baseCost, count, 1.25);
+                    costEl = document.getElementById(`${type}-cost`);
+                    if(costEl) { costEl.parentElement.disabled = gameState.milk < cost; costEl.textContent = formatNumber(cost); }
                 });
-
-                // Update prestige
                 reputationPointsEl.textContent = formatNumber(gameState.reputation);
                 reputationBonusEl.textContent = ((getReputationBonus() - 1) * 100).toFixed(0);
                 prestigeButton.disabled = gameState.milk < PRESTIGE_COST;
@@ -601,54 +489,46 @@
                     const ach = achievements[id];
                     const isUnlocked = gameState.unlockedAchievements.includes(id);
                     if(ach.hidden && !isUnlocked) return;
-                    
                     const el = document.createElement('div');
                     el.className = `p-2 rounded-lg transition-all duration-300 font-semibold flex justify-between items-center ${isUnlocked ? 'bg-yellow-300 text-yellow-800' : 'bg-gray-200 text-gray-500'}`;
                     el.innerHTML = `<div><strong>${ach.name}</strong><p class="text-sm font-normal">${ach.description}</p></div>`;
-                    
                     if (isUnlocked) {
-                        const shareBtn = document.createElement('button');
-                        shareBtn.title = "Share Achievement";
-                        shareBtn.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"></path></svg>`;
-                        shareBtn.className = "ml-4 focus:outline-none";
-                        shareBtn.addEventListener('click', (e) => { e.stopPropagation(); generateAchievementScreenshot(id); });
-                        el.appendChild(shareBtn);
+                        const shareIcon = document.createElement('span');
+                        shareIcon.innerHTML = `<svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-3V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm11 12H4v-8h16v8zm-9-4h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
+                        shareIcon.title = "Share Achievement";
+                        shareIcon.addEventListener('click', (e) => { e.stopPropagation(); generateAchievementScreenshot(id); });
+                        el.appendChild(shareIcon);
                     }
                     achievementsList.appendChild(el);
                 });
             };
 
-            const saveGame = () => localStorage.setItem(SAVE_KEY, JSON.stringify(gameState));
+            const saveGame = () => localStorage.setItem('cowClickerSave_v0.4.3', JSON.stringify(gameState));
             const loadGame = () => {
-                const savedState = localStorage.getItem(SAVE_KEY);
-                let loadedState = savedState ? JSON.parse(savedState) : {};
-                // Merge saved state with initial state to ensure new properties are added
-                gameState = { ...initialGameState, ...loadedState };
-                // Deep merge for nested objects like 'cows'
-                gameState.cows = { ...initialGameState.cows, ...loadedState.cows };
+                const savedState = localStorage.getItem('cowClickerSave_v0.4.3');
+                gameState = savedState ? JSON.parse(savedState) : { ...initialGameState };
+                Object.keys(initialGameState).forEach(key => {
+                    if(gameState[key] === undefined) { gameState[key] = initialGameState[key]; }
+                    if (typeof initialGameState[key] === 'object' && initialGameState[key] !== null && !Array.isArray(initialGameState[key])) {
+                        gameState[key] = { ...initialGameState[key], ...gameState[key] };
+                    }
+                });
                 nicknameInput.value = gameState.nickname;
             };
             const hardReset = () => {
-                showConfirmation('Hard Reset?', 'This will completely erase all your progress. This is irreversible!', () => {
-                    localStorage.removeItem(SAVE_KEY);
+                if (confirm("Are you sure you want to completely reset your game?")) {
+                    localStorage.removeItem('cowClickerSave_v0.4.3');
                     location.reload();
-                });
+                }
             };
 
             const gameLoop = () => {
-                const secondsPassed = 0.1; // 100ms interval
-                const mps = getMilkPerSecond();
-                
-                gameState.milk += mps * secondsPassed;
-                gameState.totalMilk += mps * secondsPassed;
+                const secondsPassed = 0.1;
+                gameState.milk += getMilkPerSecond() * secondsPassed;
+                gameState.totalMilk += getMilkPerSecond() * secondsPassed;
                 gameState.timePlayed += secondsPassed;
-
-                if(gameState.cows.jersey > 0 && Math.random() < (gameState.cows.jersey * 0.01 * secondsPassed)) { 
-                    gameState.cream++; 
-                    gameState.totalCream++; 
-                }
+                if(Math.random() < (gameState.cows.jersey * 0.1 * secondsPassed)) { gameState.cream++; gameState.totalCream++; }
                 gameState.reputation += gameState.cows.angus * 0.01 * secondsPassed;
-                
                 updateUI();
                 checkAchievements();
             };
@@ -659,12 +539,20 @@
                 document.getElementById(tabName).classList.add('active');
                 modalOverlay.classList.add('show');
             };
-            const closeModal = () => modalOverlay.classList.remove('show');
+            const closeModal = () => {
+                modalOverlay.classList.remove('show');
+            };
 
-            tabButtons.forEach(button => button.addEventListener('click', () => openModal(button.dataset.tab)));
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    openModal(button.dataset.tab);
+                });
+            });
             modalCloseBtn.addEventListener('click', closeModal);
             modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) closeModal();
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
             });
 
             // --- Initialization ---
@@ -678,17 +566,16 @@
             prestigeButton.addEventListener('click', prestige);
             resetButton.addEventListener('click', hardReset);
 
-            // Setup buy buttons
-            document.getElementById('buy-farmhand').addEventListener('click', () => buyItem(calculateCost(10, gameState.farmhands), 'milk', () => gameState.farmhands++));
-            document.getElementById('buy-machine').addEventListener('click', () => buyItem(calculateCost(50, gameState.machines), 'milk', () => gameState.machines++));
-            document.getElementById('buy-creamery').addEventListener('click', () => buyItem(calculateCost(10, gameState.creameries, 1.5), 'cream', () => gameState.creameries++));
-            document.getElementById('buy-holstein').addEventListener('click', () => buyItem(calculateCost(1000, gameState.cows.holstein, 1.25), 'milk', () => gameState.cows.holstein++));
-            document.getElementById('buy-jersey').addEventListener('click', () => buyItem(calculateCost(5000, gameState.cows.jersey, 1.25), 'milk', () => gameState.cows.jersey++));
-            document.getElementById('buy-angus').addEventListener('click', () => buyItem(calculateCost(1e6, gameState.cows.angus, 1.25), 'milk', () => gameState.cows.angus++));
+            document.getElementById('buy-farmhand').addEventListener('click', () => buyWithMilk(calculateCost(10, gameState.farmhands), () => gameState.farmhands++));
+            document.getElementById('buy-machine').addEventListener('click', () => buyWithMilk(calculateCost(50, gameState.machines), () => gameState.machines++));
+            document.getElementById('buy-creamery').addEventListener('click', () => buyWithCream(calculateCost(10, gameState.creameries, 1.5), () => gameState.creameries++));
+            document.getElementById('buy-holstein').addEventListener('click', () => buyWithMilk(calculateCost(1000, gameState.cows.holstein, 1.25), () => gameState.cows.holstein++));
+            document.getElementById('buy-jersey').addEventListener('click', () => buyWithMilk(calculateCost(5000, gameState.cows.jersey, 1.25), () => gameState.cows.jersey++));
+            document.getElementById('buy-angus').addEventListener('click', () => buyWithMilk(calculateCost(1e6, gameState.cows.angus, 1.25), () => gameState.cows.angus++));
 
             setInterval(gameLoop, 100);
             setInterval(saveGame, 5000);
-            setInterval(spawnGoldenCow, 60000); // Spawn a golden cow every minute
+            setInterval(spawnGoldenCow, 60000);
         });
     </script>
 </body>
